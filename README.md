@@ -1,0 +1,1 @@
+# Skinstric_AI_Internship
