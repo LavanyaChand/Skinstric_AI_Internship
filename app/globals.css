@@ -1,0 +1,203 @@
+@import "tailwindcss";
+
+/* Roobert Font */
+
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/RoobertTRIAL-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/RoobertTRIAL-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/RoobertTRIAL-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/RoobertTRIAL-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/RoobertTRIAL-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roobert";
+  src: url("/fonts/RoobertTRIAL-Heavy.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@theme {
+  --font-sans-1: "Roobert", sans-serif;
+  --font-sans-2: Inter, sans-serif;
+
+  --color-dark-1: #0b0b0c;
+  --color-dark-2: #1A1B1C;
+  --color-dark-3: #A0A4AB;
+  --color-dark-4: #1a1b1c83;
+  --color-light-1: #ffffff;
+  --color-light-2: #FCFCFC;
+  --color-light-4: #a1a1b2;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  --ease-in-out: cubic-bezier(.4,0,.2,1);
+  --animate-pulse: pulse 2s cubic-bezier(.4,0,.6,1) infinite;
+  --default-transition-duration: .15s;
+  --default-transition-timing-function: cubic-bezier(.4,0,.2,1);
+}
+
+@layer base {
+  *{
+    @apply box-border p-0 m-0; 
+  }
+  body { 
+    @apply bg-light-1 min-h-screen font-sans; 
+  }  
+  a { 
+    @apply no-underline ; 
+  }
+}
+
+@layer components {
+
+  .hero-title {
+    /* 60px on mobile, 100px on lg; tight tracking/leading; uses Roobert via font-sans on <body> */
+    @apply text-[60px] lg:text-[100px] text-dark-2 font-normal font-sans-2 tracking-tighter leading-none;
+  }
+
+  .hero-span {
+    @apply block text-dark-2;
+  }
+
+  /* Mobile subtext */
+  .hero-sub-sm {
+    @apply z-10 block lg:hidden w-[300px] mt-4 text-[16px] font-semibold text-center text-dark-4;
+  }
+
+  /* Mobile CTA wrapper */
+  .hero-cta-sm {
+    @apply z-10 mt-4 lg:hidden;
+  }
+
+  /* Button: label + diamond + arrow (mobile) */
+  .btn-ghost {
+    @apply relative inline-flex items-center gap-4 transition-transform duration-300 hover:scale-105;
+  }
+
+  .btn-ghost__label {
+    @apply text-[12px] font-bold;
+  }
+
+
+  .diamond-24 {
+    @apply w-[24px] h-[24px] border border-black rotate-45;
+  }
+
+  .diamond-30 {
+    @apply w-[30px] h-[30px] border border-black rotate-45;
+  }
+  
+  .hero-caption-left {
+    @apply hidden lg:block fixed font-medium text-sm text-dark-2 uppercase space-y-3;
+    bottom: 7vh;   /* breathing room from bottom */
+    left: 1vw;     /* breathing room from left */
+    max-width: 307px;
+  }
+  
+}
+
+
+
+@layer utilities {
+
+  .flex-center{
+    @apply flex items-center justify-center;
+  }
+
+  .inline-flex-center{
+    @apply inline-flex items-center justify-center
+  }
+
+/* one place to tweak timing/feel */
+  .hero-anim {
+    transition: transform 700ms cubic-bezier(.22,.66,.22,1),
+                opacity 400ms cubic-bezier(.22,.66,.22,1);
+    will-change: transform, opacity;
+  }
+
+  /* X translations for the whole title (line 1) */
+  .hero-x-0     { transform: translateX(0); }
+  .hero-x-left  { transform: translateX(-20rem); } /* move title to the left */
+  .hero-x-right { transform: translateX(20rem); } /* move title to the right */
+
+  /* X translations for the second line only */
+  .hero-line-0     { transform: translateX(0); }
+  .hero-line-left  { transform: translateX(-6rem); }
+  .hero-line-right { transform: translateX(6rem); }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-anim { transition: none; }
+  }
+
+}
+
+@-webkit-keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-fill-mode: both; /* keep opacity at 1 after */
+}
+
+/* Variants with delays */
+.delay-1 {
+  animation-delay: 0.5s; /* half second */
+}
+.delay-2 {
+  animation-delay: 1s;   /* one second */
+}
+.delay-3 {
+  animation-delay: 2s;   /* two seconds */
+}
+
+/* AOS-like selector if you use AOS
+[data-aos="custom-fadeIn"] {
+  opacity: 0;
+}
+[data-aos="custom-fadeIn"].aos-animate {
+  opacity: 1;
+  animation: fadeIn 1s both;
+} */
+
