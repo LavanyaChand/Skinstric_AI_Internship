@@ -115,6 +115,10 @@
     @apply text-[12px] font-bold;
   }
 
+  .diamond {
+  @apply rotate-45 rounded-none;
+}
+
   .diamond-24 {
     @apply w-[24px] h-[24px] border border-dark-2 rotate-45;
   }
@@ -126,14 +130,19 @@
   .diamond-44 {
      @apply w-[44px] h-[44px] border border-dark-2 rotate-45;
   }
-
+  
   .diamond-350 {
     @apply w-[350px] h-[350px] border border-dark-3 rotate-45;
+  }
+
+  .diamond-400 {
+    @apply w-[400px] h-[400px] border rotate-45;
   }
   
   .diamond-420 {
     @apply w-[420px] h-[420px] border border-dark-3 rotate-45;
   }
+
 
   .hero-caption-left {
     @apply hidden lg:block fixed font-medium text-sm text-dark-2 uppercase space-y-3;
@@ -142,9 +151,6 @@
     max-width: 307px;
   }
 
-  /* .shad-form_message {
-    @apply text-red !important;
-  } */
 
   .hero-input {
     @apply w-full max-w-[420px] mx-auto bg-transparent 
@@ -153,7 +159,6 @@
            text-[44px] md:text-[64px] text-[#7a7d84] font-normal tracking-tight 
            placeholder-[#7a7d84] text-center outline-none;
   }
-
 
 
 }
@@ -209,6 +214,22 @@
   animation-fill-mode: both; /* keep opacity at 1 after */
 }
 
+/* Fade + slight scale for step transitions */
+@keyframes fadeInUp {
+  from { 
+    opacity: 0; 
+    transform: translateY(6px) scale(.995); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+  }
+}
+
+.animate-fade-in { 
+  animation: fadeInUp .45s cubic-bezier(.22,.66,.22,1) both; 
+}
+
 /* Variants with delays */
 .delay-1 {
   animation-delay: 0.5s; /* half second */
@@ -220,14 +241,30 @@
   animation-delay: 2s;   /* two seconds */
 }
 
-/* AOS-like selector if you use AOS
-[data-aos="custom-fadeIn"] {
-  opacity: 0;
+
+ .loading-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background: #1A1B1C;
+    animation: dotPulse 1s ease-in-out infinite;
+  }
+
+.dot-delay-1 { 
+  animation-delay: 0.12s; 
 }
-[data-aos="custom-fadeIn"].aos-animate {
-  opacity: 1;
-  animation: fadeIn 1s both;
-} */
+
+.dot-delay-2 { 
+  animation-delay: 0.24s; 
+}
+
+
+@keyframes dotPulse {
+  0%, 80%, 100% { transform: scale(0.7); opacity: .5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

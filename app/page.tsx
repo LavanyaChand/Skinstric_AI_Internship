@@ -65,13 +65,13 @@ export default function Home() {
         >
           <div className="relative w-full h-full">
             <div className="w-full h-full rotate-45 fixed border border-dotted border-dark-3 inset-0" />
-            <button className={`cursor-pointer group inline-flex items-center justify-center gap-4 text-sm text-dark-2 h-9
+            <button className="cursor-pointer group inline-flex items-center justify-center gap-4 text-sm text-dark-2 h-9
                                absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/5 xl:translate-x-1/6
-                               [@media(width>=1920px)]:translate-x-1/20 px-3 py-1 `}
+                               [@media(width>=1920px)]:translate-x-1/20 px-3 py-1"
                                onMouseEnter={() => setHover('left')}
                                 onMouseLeave={() => setHover(null)}
                                >
-              <div className="diamond-30 duration-300" />
+              <div className="diamond-30 group-hover:scale-110 duration-300" />
               <span className="absolute left-[20px] top-[14px] hover:scale-[0.9] duration-300">
                 <Image src={arrowLeft} width={11} height={18} alt="" />
               </span>
@@ -89,10 +89,9 @@ export default function Home() {
           <div className="relative w-full h-full">
             <div className="w-full h-full rotate-45 fixed border border-dotted border-dark-3 inset-0" />
             <Link href="/testing">
-              <button className={`cursor-pointer group inline-flex items-center justify-center gap-4 text-sm text-dark-2 h-9
+              <button className="cursor-pointer group inline-flex items-center justify-center gap-4 text-sm text-dark-2 h-9
                                  absolute top-1/2 left-0 -translate-y-1/2 -translate-x-1/5 xl:-translate-x-1/6
-                                 [@media(width>=1920px)]:-translate-x-1/20 px-3 py-1
-                                  `}
+                                 [@media(width>=1920px)]:-translate-x-1/20 px-3 py-1"
                                  onMouseEnter={() => setHover('right')}
                                  onMouseLeave={() => setHover(null)}
                                  >
