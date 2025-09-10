@@ -3,7 +3,7 @@ import React from 'react'
 
 const NavBar = () => {
     return (
-        <div className="flex flex-row h-[64px] w-full justify-between py-3 mb-3 relative z-1000">
+        <div className="absolute top-0 left-0 flex flex-row h-[64px] w-full justify-between py-3 mb-3 z-[1000] bg-transparent">
             <div className="flex-center flex-row pt-1 scale-75">
                 <Link
                     href="/"
