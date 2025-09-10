@@ -25,6 +25,7 @@ import Link from 'next/link'
 import largeDiamond from '../../public/images/largeDiamond.png';
 import mediumDiamond from '../../public/images/mediumDiamond.png';
 import smallDiamond from '../../public/images/smallDiamond.png';
+import SideHeading from '../component/SideHeading'
 
 
 const ENDPOINT = "https://us-central1-frontend-simplified.cloudfunctions.net/skinstricPhaseOne";
@@ -167,9 +168,7 @@ const TestPage = () => {
       <DottedDiamonds />
 
       {/* Top-left small label */}
-      <div className="fixed top-16 left-9 ">
-        <p className="font-semibold text-[12px]">TO START ANALYSIS</p>
-      </div>
+      <SideHeading />
 
       {/* CONTENT */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full h-full">
