@@ -1,5 +1,5 @@
 // app/layout.tsx
-import NavBar from "./component/NavBar";
+import NavBar from "./sharedComponent/NavBar";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 

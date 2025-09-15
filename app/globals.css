@@ -265,6 +265,57 @@
   40% { transform: scale(1); opacity: 1; }
 }
 
+/* slow spins like your mock */
+/* @keyframes spin-slow   { to { transform: rotate(360deg);  } }
+@keyframes spin-slower { to { transform: rotate(360deg); } }
+@keyframes spin-slowest{ to { transform: rotate(360deg); } } */
+
+.animate-spin-slow    { animation: spin 50s linear infinite; }
+.animate-spin-slower  { animation: spin 70s linear infinite; }
+.animate-spin-slowest { animation: spin 85s linear infinite; }
+
+/* globals.css */
+@keyframes fade-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0) ; }
+}
+
+.fade-up {
+  animation: fade-up 0.6s ease-out forwards;
+}
+.fade-up-delay-1 { animation-delay: 0.1s; }
+.fade-up-delay-2 { animation-delay: 0.25s; }
+.fade-up-delay-3 { animation-delay: 0.4s; }
+.fade-up-delay-4 { animation-delay: 0.55s; }
+
+@keyframes drift-breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+}
+
+.diamond-animate {
+  animation-name: drift-breathe;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Different speeds for depth */
+.diamond-speed-1 { animation-duration: 12s; }
+.diamond-speed-2 { animation-duration: 16s; }
+.diamond-speed-3 { animation-duration: 20s; }
+
+
+
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);

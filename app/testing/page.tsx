@@ -1,10 +1,9 @@
 "use client"
 
 import React, { useState } from 'react'
-import Image from 'next/image'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { toast } from "sonner"
+// import { toast } from "sonner"
 import { z } from "zod"
 import { userName } from '@/lib/validation'
 import { userLocation } from '@/lib/validation'
@@ -17,99 +16,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-// import { Input } from "@/components/ui/input"
-import arrowLeft from '../../public/icons/arrowLeft.svg';
-import arrowRight from '../../public/icons/arrowRight.svg'
 import axios from 'axios';
-import Link from 'next/link'
-import largeDiamond from '../../public/images/largeDiamond.png';
-import mediumDiamond from '../../public/images/mediumDiamond.png';
-import smallDiamond from '../../public/images/smallDiamond.png';
-import SideHeading from '../component/SideHeading'
-
+import SideHeading from '../sharedComponent/SideHeading'
+import BackButton from '../sharedComponent/BackButton'
+import ProceedButton from '../sharedComponent/ProceedButton'
+import DottedDiamonds from '../sharedComponent/DottedDiamonds'
 
 const ENDPOINT = "https://us-central1-frontend-simplified.cloudfunctions.net/skinstricPhaseOne";
 
-
-function DottedDiamonds() {
-  // five dotted, slowly drifting rotated squares
-  return (
-    <div>
-      <Image priority={false}
-        src={largeDiamond}
-        alt=""
-        className='absolute flex-center w-[480px] h-[480px] md:w-[762px] md:h-[762px] top-1/2 left-1/2 -translate-x-[50%] -translate-y-1/2'
-      />
-      <Image priority={false}
-        src={mediumDiamond}
-        alt=""
-        className='absolute flex-center w-[400px] h-[400px] md:w-[682px] md:h-[682px] top-1/2 left-1/2 -translate-x-[50%] -translate-y-1/2'
-      />
-      <Image priority={false}
-        src={smallDiamond}
-        alt=""
-        className='absolute flex-center w-[320px] h-[320px] md:w-[602px] md:h-[602px] top-1/2 left-1/2 -translate-x-[50%] -translate-y-1/2'
-      />
-    </div>
-
-  );
-}
-
-function BackCorner() {
-  return (
-    <Link
-      href="/"
-      aria-label="Back"
-      className="flex items-center text-dark-2 group"
-    >
-      <div className="diamond-44 grid place-items-center transition-transform duration-300 group-hover:scale-110">
-        {/* mobile label inside diamond */}
-        <span className="-rotate-45 md:hidden text-[10px] font-semibold uppercase tracking-wide">
-          Back
-        </span>
-        {/* desktop arrow inside diamond */}
-        <span className="-rotate-45 hidden md:block leading-none transition-transform duration-300 group-hover:scale-90">
-          <Image src={arrowLeft} alt="" />
-        </span>
-      </div>
-      {/* desktop label outside */}
-      <span className="hidden md:inline-block ml-6 text-sm font-semibold uppercase tracking-wide">
-        Back
-      </span>
-    </Link>
-  );
-}
-
-function ProceedCorner() {
-  return (
-    <div className="flex items-center text-dark-2 group">
-      {/* desktop label outside */}
-      <span className="hidden md:inline-block mr-6 text-sm font-semibold uppercase tracking-wide">
-        Proceed
-      </span>
-
-      <Link href="/result" aria-label="Proceed">
-        <div className="diamond-44 grid place-items-center transition-transform duration-300 group-hover:scale-110">
-          {/* mobile label inside diamond */}
-          <span className="-rotate-45 md:hidden text-[10px] font-semibold uppercase tracking-wide">
-            Proceed
-          </span>
-          {/* desktop arrow inside diamond */}
-          <span className="-rotate-45 hidden md:block leading-none transition-transform duration-300 group-hover:scale-90">
-            <Image src={arrowRight} alt="" />
-          </span>
-        </div>
-      </Link>
-    </div>
-  );
-}
-
-
-
-
 const TestPage = () => {
-
-  // const navigate = useNavigate();
 
   const [step, setStep] = useState<"name" | "city" | "loading" | "done">("name");
 
@@ -158,13 +73,14 @@ const TestPage = () => {
 
     catch (err) {
       console.error("Error submitting city:", err);
-      setStep("done"); // fallback to done state for demo
+      setStep("done"); // fallback to done state
     }
   }
 
   return (
     <div className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* BG diamonds */}
+      
+      {/* Background diamonds */}
       <DottedDiamonds />
 
       {/* Top-left small label */}
@@ -249,9 +165,6 @@ const TestPage = () => {
         {/* LOADING */}
         {step === "loading" && (
           <FadeIn key="loading">
-            {/* <div className="mx-auto grid place-items-center">
-              <div className="diamond dotted size-[520px] rotate-45 mb-10" />
-            </div> */}
             <p className=" flex items-center justify-center text-sm text-[#6C7280]">Processing submission</p>
             <div className="mt-3 flex items-center justify-center gap-2 z-10">
               <span className="loading-dot" />
@@ -274,19 +187,18 @@ const TestPage = () => {
         )}
       </div>
     
-        {/* Back corner always visible */}
-        {/* Bottom bar – transparent */}
+        {/* Bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-[100] bg-transparent pointer-events-none md:px-9 px-13">
         <div className="relative h-24">
           {/* left/corner */}
           <div className="absolute left-6 md:left-0 bottom-8 pointer-events-auto">
-            <BackCorner />
+            <BackButton />
           </div>
 
           {/* right/corner */}
           {step === "done" && (
             <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto">
-              <ProceedCorner />
+              <ProceedButton />
             </div>
           )}
         </div>
