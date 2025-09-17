@@ -17,7 +17,7 @@ import ResCameraLine from "../../public/icons/leftTileLine.svg"
 
 type CamPrompt = "idle" | "prompt";
 
-// util: file -> base64 (no data: prefix)
+// file -> base64
 function fileToBase64(file: File): Promise<string> {
   return new Promise((res, rej) => {
     const reader = new FileReader();
@@ -31,10 +31,10 @@ export default function ResultPage() {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // store setters (needed so /select has data)
+  // store setters 
   const { setImage, setResult } = useAnalysisStore();
 
-  // preview (object URL) for the small box on the right
+  // preview for the small box on the right
   const [preview, setPreview] = useState<string | null>(null);
   const previewUrlRef = useRef<string | null>(null);
 
@@ -42,14 +42,13 @@ export default function ResultPage() {
   const [camPrompt, setCamPrompt] = useState<CamPrompt>("idle");
 
   useEffect(() => {
-    // cleanup object-URL when leaving the page
     return () => {
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     };
   }, []);
 
   async function handleFile(file: File) {
-    // Show preview immediately
+    // Showing preview immediately
     const url = URL.createObjectURL(file);
     if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
     previewUrlRef.current = url;
@@ -78,7 +77,7 @@ export default function ResultPage() {
   }
 
 
-  /* ----- camera permission modal actions ----- */
+  /* camera permission modal actions */
   function openCameraPrompt() {
     setCamPrompt("prompt");
   }
@@ -87,7 +86,7 @@ export default function ResultPage() {
   }
   function allowCamera() {
     setCamPrompt("idle");
-    router.push("/camera"); // your dedicated camera flow
+    router.push("/camera"); 
   }
 
   return (
@@ -151,7 +150,7 @@ export default function ResultPage() {
                 ALLOW A.I.<br />ACCESS GALLERY
               </p>
 
-              {/* the line image (hidden on small; exact placement on md+) */}
+              {/* the line image */}
               <Image
                 src={ResGalleryLine}
                 alt="Gallery Line"
@@ -165,12 +164,11 @@ export default function ResultPage() {
         </div>
 
 
-        {/* Preview box (top-right of tiles area) */}
+        {/* Preview box  */}
         <div className="absolute top-[-50px] right-7 md:top-[50px] md:right-8 z-[250]">
           <h1 className="text-xs md:text-sm font-medium mb-1">Preview</h1>
           <div className="w-24 h-24 md:w-32 md:h-32 border border-gray-300 overflow-hidden bg-white/50">
             {preview ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img src={preview} alt="Preview" className="w-full h-full object-cover" />
             ) : null}
           </div>
@@ -198,63 +196,39 @@ export default function ResultPage() {
         }}
       />
 
-      {/* Camera Allow/Deny modal */}
-      {/* {camPrompt === "prompt" && (
-        <div className="fixed inset-0 z-[120] bg-black/30 backdrop-blur-[1px] grid place-items-center">
-          <div className="w-[400px] max-w-[92vw] bg-dark-2 text-light-2 pt-4 pb-2">
-            <h2 className="text-base font-semibold mb-12 leading-[24px] pl-4">
-              ALLOW A.I. TO ACCESS YOUR CAMERA
-            </h2>
-            <div className="flex mt-4 pt-2 border-t border-light-2">
-              <button
-                className="px-10 md:translate-x-45 text-[#fcfcfca1] font-normal text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-500"
-                onClick={denyCamera}
-              >
-                DENY
-              </button>
-              <button
-                className="px-5 md:translate-x-45 text-light-1 font-semibold text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-300"
-                onClick={allowCamera}
-              >
-                ALLOW
-              </button>
+
+      {camPrompt === "prompt" && (
+        <div className="fixed inset-0 z-[120] pointer-events-none">
+          {/* Center the card */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+            <div className="w-[400px] max-w-[92vw] bg-dark-2 text-light-1 shadow-xl pt-4 pb-2">
+              {/* Title */}
+              <div className="text-base font-semibold mb-12 leading-[24px] pl-4">
+                ALLOW A.I. TO ACCESS YOUR CAMERA
+              </div>
+
+
+
+              {/* Actions */}
+              <div className="flex mt-4 pt-2 border-t border-light-1">
+                <button
+                  className="px-10 md:translate-x-45 text-[#fcfcfca1] font-normal text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-500"
+                  onClick={denyCamera}
+                >
+                  DENY
+                </button>
+
+                <button
+                  className="px-5 md:translate-x-45 text-light-1 font-semibold text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-300"
+                  onClick={allowCamera}
+                >
+                  ALLOW
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      )} */}
-
-      {camPrompt === "prompt" && (
-  <div className="fixed inset-0 z-[120] pointer-events-none">
-    {/* Center the card */}
-    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
-      <div className="w-[400px] max-w-[92vw] bg-dark-2 text-light-1 shadow-xl pt-4 pb-2">
-        {/* Title */}
-        <div className="text-base font-semibold mb-12 leading-[24px] pl-4">
-          ALLOW A.I. TO ACCESS YOUR CAMERA
-        </div>
-
-        
-
-        {/* Actions (like your reference) */}
-        <div className="flex mt-4 pt-2 border-t border-light-1">
-          <button
-            className="px-10 md:translate-x-45 text-[#fcfcfca1] font-normal text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-500"
-            onClick={denyCamera}
-          >
-            DENY
-          </button>
-          
-          <button
-            className="px-5 md:translate-x-45 text-light-1 font-semibold text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-300"
-            onClick={allowCamera}
-          >
-            ALLOW
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
 
       {/* Loading overlay */}

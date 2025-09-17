@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-// import { toast } from "sonner"
 import { z } from "zod"
 import { userName } from '@/lib/validation'
 import { userLocation } from '@/lib/validation'
@@ -28,7 +27,7 @@ const TestPage = () => {
 
   const [step, setStep] = useState<"name" | "city" | "loading" | "done">("name");
 
-  // keep values across steps
+ 
   const [nameValue, setNameValue] = useState("");
   const [cityValue, setCityValue] = useState("");
 
@@ -66,7 +65,7 @@ const TestPage = () => {
 
       console.log(JSON.stringify({ SUCCESS: `Added ${nameValue} from ${location}` }));
 
-      // Simulate a small delay to see the loader  
+      // a small delay to see the loader  
       await new Promise((r) => setTimeout(r, 1000));
       setStep("done");
     }
@@ -190,12 +189,12 @@ const TestPage = () => {
         {/* Bottom bar */}
       <div className="fixed inset-x-0 bottom-0 z-[100] bg-transparent pointer-events-none md:px-9 px-13">
         <div className="relative h-24">
-          {/* left/corner */}
+          {/* left corner (back button)*/}
           <div className="absolute left-6 md:left-0 bottom-8 pointer-events-auto">
             <BackButton />
           </div>
 
-          {/* right/corner */}
+          {/* right corner (proceed button)*/}
           {step === "done" && (
             <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto fadeInRight">
               <ProceedButton />

@@ -29,7 +29,7 @@ export default function Home() {
             <span className={`hero-span hero-anim ${line2Shift}`}>skincare</span>
           </h1>
 
-          {/* mobile subtext + CTA (unchanged) */}
+          {/* mobile design*/}
 
           <div className="absolute inset-0 flex items-center justify-center lg:hidden fadeIn delay-3">
             <div className="diamond-350 border-dotted absolute top-[50%] left-1/2 -translate-x-[50%] -translate-y-[50%]"></div>

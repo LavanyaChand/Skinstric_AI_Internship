@@ -17,7 +17,7 @@ const NavBar = () => {
          <Link
           href="/"
           // camera page: white by default; other pages: dark
-          className={`font-bold h-9 px-4 py-2 ${isCamera ? "text-white" : "text-dark-1"}`}
+          className={`font-bold h-9 px-4 py-2 ${isCamera ? "text-light-1" : "text-dark-1"}`}
           // if --nav-logo-color exists, it overrides; if not, this inline
           // color is ignored and the class color is used.
           style={{ color: "var(--nav-logo-color)" }}

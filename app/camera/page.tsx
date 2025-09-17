@@ -43,7 +43,7 @@ export default function CameraPage() {
   }, [loading]);
 
 
-  /** Start the camera and play after metadata */
+  /* Start the camera */
   const startCamera = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -81,7 +81,7 @@ export default function CameraPage() {
 
   /* Stop the camera */
   const stopCamera = useCallback(() => {
-    // already stopped? bail
+ 
     if (!streamRef.current && !videoRef.current?.srcObject) {
       setIsReady(false);
       return;
@@ -91,22 +91,22 @@ export default function CameraPage() {
     const s = streamRef.current;
 
     try {
-      // 1) Detach the stream from the <video> ASAP
+      
       if (v) {
         try { v.pause(); } catch { }
-        // Clearing srcObject first helps some browsers stop rendering immediately
+        
         try { (v as any).srcObject = null; } catch { }
-        // Also clear src to cover Safari/WebKit oddities
+ 
         try { v.removeAttribute("src"); } catch { }
-        // Force a readyState reset
+        
         try { v.load(); } catch { }
       }
 
-      // 2) Stop *all* tracks (video+audio in case audio sneaks in)
+     
       if (s) {
         for (const t of s.getTracks()) {
           try { t.stop(); } catch { }
-          // Optional: detach from stream for good measure
+         
           try { s.removeTrack?.(t as any); } catch { }
         }
       }
@@ -123,7 +123,7 @@ export default function CameraPage() {
     return () => stopCamera();
   }, [startCamera, stopCamera]);
 
-  /** If we switch back to video, ensure it's playing */
+  /* If we switch back to video, ensure it's playing */
   useEffect(() => {
     if (!shotDataUrl && videoRef.current) {
       const v = videoRef.current;
@@ -153,14 +153,12 @@ export default function CameraPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // grab the current frame
+
     ctx.drawImage(video, 0, 0, vw, vh);
 
-    // persist the image first
     const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
     setShotDataUrl(dataUrl);
 
-    // HARD STOP immediately (don’t wait for next frame)
     stopCamera();
   }
 
@@ -194,11 +192,11 @@ export default function CameraPage() {
 
   return (
     <>
-      {/* Wrapping main keeps the video area responsive under your navbar */}
+      
       <main className="flex flex-col min-h-screen bg-black">
-        {/* Camera stage (same height behavior as your ref: ~92vh under the header) */}
+        {/* Camera stage */}
         <div className="relative w-screen h-[100vh] overflow-hidden bg-black">
-          {/* Figma-accurate loader. Keeps exact sizes; only scales on very small screens */}
+          {/* Camera Loader */}
           {!isReady && !shotDataUrl && (
             <div className="absolute inset-0 z-20 grid place-items-center bg-white text-black">
               <div className="relative w-[760px] max-w-[92vw] aspect-square">
@@ -240,7 +238,6 @@ export default function CameraPage() {
                     SETTING UP CAMERA…
                   </p>
 
-                  {/* Helper bullets (as in your Figma) */}
                   <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 text-sm md:text-xs mt-2.5 text-black/70">
                     <p className="uppercase text-center mb-3">
                       To get better results make sure to have
@@ -275,7 +272,7 @@ export default function CameraPage() {
               className="absolute inset-0 w-full h-full object-cover"
             />
           ) : (
-            // eslint-disable-next-line @next/next/no-img-element
+           
             <img
               src={shotDataUrl}
               alt="Captured"

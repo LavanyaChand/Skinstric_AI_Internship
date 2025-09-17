@@ -82,7 +82,7 @@ function Page() {
   );
 
 
-  const isDirty =
+  const isConfirm =
     actualRace !== defaults.race ||
     actualAge !== defaults.age ||
     actualGender !== defaults.gender;
@@ -101,7 +101,7 @@ function Page() {
   const displayLabel = currentRow?.label ?? "";
   const ringPct = currentRow?.value ?? 0;
 
-  // --- handlers for Reset / Confirm ---
+  //handlers for Reset / Confirm
   const handleReset = () => {
     setActual("race", defaults.race);
     setActual("age", defaults.age);
@@ -135,11 +135,10 @@ function Page() {
 
       {nothingLoaded && (
         <p className="mx-4 md:mx-0 text-xs text-red-500">
-          This is sample data. Please upload an image or let A.I. scan your face to run the analysis.
+          This is a sample data for your reference. Please upload an image or choose to let A.I. scan your face to run your actual analysis.
         </p>
       )}
 
-      {/* wrapper grid: 1 col by default, 3 cols from lg up */}
       <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_8.5fr_3.15fr] gap-4 mt-10 mb-40 lg:mb-0 lg:gap-4 pb-0 fadeIn delay-2_5">
 
         {/* Left rail */}
@@ -293,7 +292,7 @@ function Page() {
       {/* Bottom bar */}
       <div className="relative inset-x-0 bottom-0 z-[100] bg-transparent pointer-events-none md:px-9 px-13">
         <div className="h-24">
-          {/* left/corner: Back */}
+          {/* Back button */}
           <div className="absolute left-6 md:left-0 bottom-8 pointer-events-auto">
             {nothingLoaded ? (
               <Link href="/result" aria-label="Back" className="flex items-center text-dark-2 group">
@@ -327,9 +326,9 @@ function Page() {
             <button
               type="button"
               onClick={handleConfirm}
-              disabled={!isDirty}
+              disabled={!isConfirm}
               className={`h-10 px-6 text-sm font-semibold tracking-wide transition
-                ${isDirty ? "bg-[#1A1B1C] text-white hover:bg-black cursor-pointer" : "bg-[#1A1B1C]/30 text-white/70 cursor-not-allowed"}`}
+                ${isConfirm ? "bg-[#1A1B1C] text-white hover:bg-black cursor-pointer" : "bg-dark-2/30 text-white/70 cursor-not-allowed"}`}
             >
               CONFIRM
             </button>
