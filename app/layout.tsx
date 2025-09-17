@@ -1,7 +1,6 @@
 // app/layout.tsx
 import NavBar from "./sharedComponent/NavBar";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,7 +8,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <NavBar />
         {children}
-        <Toaster />
       </body>
     </html>
   );

@@ -215,7 +215,7 @@
 }
 
 /* Fade + slight scale for step transitions */
-@keyframes fadeInUp {
+/* @keyframes fadeInUp {
   from { 
     opacity: 0; 
     transform: translateY(6px) scale(.995); 
@@ -228,17 +228,164 @@
 
 .animate-fade-in { 
   animation: fadeInUp .45s cubic-bezier(.22,.66,.22,1) both; 
+} */
+
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 30%, 0);
+    transform: translate3d(0, 30%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
 }
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 30%, 0);
+    transform: translate3d(0, 30%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(10%, 0, 0);
+    transform: translate3d(10%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(10%, 0, 0);
+    transform: translate3d(10%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInLeft {
+  -webkit-animation-name: fadeInLeft;
+  animation-name: fadeInLeft;
+    animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@-webkit-keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-10%, 0, 0);
+    transform: translate3d(-10%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(-10%, 0, 0);
+    transform: translate3d(-10%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+.fadeInRight {
+  -webkit-animation-name: fadeInRight;
+  animation-name: fadeInRight;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+/* Zoom In */
+
+@-webkit-keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(.3, .3, .3);
+    transform: scale3d(.3, .3, .3);
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.zoomIn {
+  -webkit-animation-name: zoomIn;
+  animation-name: zoomIn;
+  animation-duration: 1s;
+}
+
 
 /* Variants with delays */
 .delay-1 {
-  animation-delay: 0.5s; /* half second */
+  animation-delay: 500; /* half second */
 }
 .delay-2 {
-  animation-delay: 1s;   /* one second */
+  animation-delay: 800; 
 }
+
+.delay-2_5{
+  animation-delay: 1s;
+}
+
 .delay-3 {
   animation-delay: 2s;   /* two seconds */
+}
+
+.delay-3_5 {
+  animation-delay: 2.5s;
 }
 
 
@@ -266,13 +413,13 @@
 }
 
 /* slow spins like your mock */
-/* @keyframes spin-slow   { to { transform: rotate(360deg);  } }
+@keyframes spin-slow   { to { transform: rotate(360deg);  } }
 @keyframes spin-slower { to { transform: rotate(360deg); } }
-@keyframes spin-slowest{ to { transform: rotate(360deg); } } */
+@keyframes spin-slowest{ to { transform: rotate(360deg); } }
 
-.animate-spin-slow    { animation: spin 50s linear infinite; }
-.animate-spin-slower  { animation: spin 70s linear infinite; }
-.animate-spin-slowest { animation: spin 85s linear infinite; }
+.animate-spin-slow    { animation: spin-slow 50s linear infinite; }
+.animate-spin-slower  { animation: spin-slower 70s linear infinite; }
+.animate-spin-slowest { animation: spin-slowest 85s linear infinite; }
 
 /* globals.css */
 @keyframes fade-up {

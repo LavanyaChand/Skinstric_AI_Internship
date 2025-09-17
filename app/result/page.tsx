@@ -12,6 +12,8 @@ import BackButton from "../sharedComponent/BackButton";
 import SideHeading from "../sharedComponent/SideHeading";
 import TileDiamondsCamera from "../sharedComponent/TileDiamondsCamera";
 import LoadingOverlay from "../sharedComponent/LoadingOverlay";
+import ResGalleryLine from "../../public/icons/rightTileLine.svg";
+import ResCameraLine from "../../public/icons/leftTileLine.svg"
 
 type CamPrompt = "idle" | "prompt";
 
@@ -105,19 +107,31 @@ export default function ResultPage() {
               alt="Camera Icon"
               width={136}
               height={136}
-              className="absolute w-[100px] h-[100px] md:w-[136px] md:h-[136px] hover:scale-108 duration-700 ease-in-out cursor-pointer"
+              className="absolute w-[80px] h-[80px] md:w-[136px] md:h-[136px] hover:scale-108 duration-700 ease-in-out cursor-pointer zoomIn delay-1"
               onClick={openCameraPrompt}
             />
             <div className="absolute bottom-[1%] right-[90px] md:top-[30.9%] md:right-[-12px] translate-y-[-20px]">
-              <p className="text-xs md:text-sm font-normal mt-1 leading-[24px]">
+              <p className="text-xs md:text-sm font-medium mt-1 leading-[24px] fadeInRight delay-2_5">
                 ALLOW A.I.<br />TO SCAN YOUR FACE
               </p>
+              {/* the line image (hidden on small; exact placement on md+) */}
+              <Image
+                src={ResCameraLine}
+                alt="Camera Line"
+                width={66}
+                height={59}
+                className="absolute hidden md:block md:right-[143px] md:top-[20px] pointer-events-none select-none fadeInRight delay-1000"
+                priority={false}
+              />
             </div>
           </div>
         </div>
 
         {/* GALLERY TILE (right) */}
-        <div className="relative md:absolute md:left-[45%] lg:left-[50%] xl:left-[55%] flex flex-col items-center mt-12 md:mt-0 justify-center md:-translate-y-[0%] -translate-y-[10%] transition-opacity duration-300">
+        <div className={`relative md:absolute md:left-[45%] lg:left-[50%] xl:left-[55%]
+              flex flex-col items-center mt-12 md:mt-0 justify-center
+              md:-translate-y-[0%] -translate-y-[10%] transition-all duration-300
+              ${camPrompt === "prompt" ? "md:blur-[1px] opacity-90 pointer-events-none" : ""}`}>
           <div className="w-[270px] h-[270px] md:w-[482px] md:h-[482px]" />
           <TileDiamondsCamera />
 
@@ -127,16 +141,29 @@ export default function ResultPage() {
               alt="Photo Upload Icon"
               width={136}
               height={136}
-              className="absolute w-[100px] h-[100px] md:w-[136px] md:h-[136px] hover:scale-108 duration-700 ease-in-out cursor-pointer"
+              className="absolute w-[80px] h-[80px] md:w-[136px] md:h-[136px] hover:scale-108 duration-700 ease-in-out cursor-pointer zoomIn delay-1"
               onClick={() => inputRef.current?.click()}
             />
+
+            {/* caption + connector line */}
             <div className="absolute top-[75%] md:top-[70%] md:left-[17px] translate-y-[-10px]">
-              <p className="text-[12px] md:text-[14px] font-normal mt-2 leading-[24px] text-right">
+              <p className="text-[12px] md:text-sm font-medium mt-2 leading-[24px] text-right fadeInLeft delay-2_5">
                 ALLOW A.I.<br />ACCESS GALLERY
               </p>
+
+              {/* the line image (hidden on small; exact placement on md+) */}
+              <Image
+                src={ResGalleryLine}
+                alt="Gallery Line"
+                width={66}
+                height={59}
+                className="absolute hidden md:block md:left-[120px] md:bottom-[39px] pointer-events-none select-none fadeInLeft delay-1000"
+                priority={false}
+              />
             </div>
           </div>
         </div>
+
 
         {/* Preview box (top-right of tiles area) */}
         <div className="absolute top-[-50px] right-7 md:top-[50px] md:right-8 z-[250]">
@@ -172,21 +199,21 @@ export default function ResultPage() {
       />
 
       {/* Camera Allow/Deny modal */}
-      {camPrompt === "prompt" && (
+      {/* {camPrompt === "prompt" && (
         <div className="fixed inset-0 z-[120] bg-black/30 backdrop-blur-[1px] grid place-items-center">
-          <div className="w-[420px] max-w-[92vw] bg-dark-2 text-light-2">
-            <div className="px-6 py-5 text-[12px] tracking-widest uppercase">
+          <div className="w-[400px] max-w-[92vw] bg-dark-2 text-light-2 pt-4 pb-2">
+            <h2 className="text-base font-semibold mb-12 leading-[24px] pl-4">
               ALLOW A.I. TO ACCESS YOUR CAMERA
-            </div>
-            <div className="border-t border-black/30 flex">
+            </h2>
+            <div className="flex mt-4 pt-2 border-t border-light-2">
               <button
-                className="flex-1 py-3 text-[#9CA3AF] hover:bg-black/30 transition"
+                className="px-10 md:translate-x-45 text-[#fcfcfca1] font-normal text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-500"
                 onClick={denyCamera}
               >
                 DENY
               </button>
               <button
-                className="flex-1 py-3 font-semibold hover:bg-black/30 transition"
+                className="px-5 md:translate-x-45 text-light-1 font-semibold text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-300"
                 onClick={allowCamera}
               >
                 ALLOW
@@ -194,7 +221,41 @@ export default function ResultPage() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+
+      {camPrompt === "prompt" && (
+  <div className="fixed inset-0 z-[120] pointer-events-none">
+    {/* Center the card */}
+    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto">
+      <div className="w-[400px] max-w-[92vw] bg-dark-2 text-light-1 shadow-xl pt-4 pb-2">
+        {/* Title */}
+        <div className="text-base font-semibold mb-12 leading-[24px] pl-4">
+          ALLOW A.I. TO ACCESS YOUR CAMERA
+        </div>
+
+        
+
+        {/* Actions (like your reference) */}
+        <div className="flex mt-4 pt-2 border-t border-light-1">
+          <button
+            className="px-10 md:translate-x-45 text-[#fcfcfca1] font-normal text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-500"
+            onClick={denyCamera}
+          >
+            DENY
+          </button>
+          
+          <button
+            className="px-5 md:translate-x-45 text-light-1 font-semibold text-sm leading-4 tracking-tight cursor-pointer hover:text-gray-300"
+            onClick={allowCamera}
+          >
+            ALLOW
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Loading overlay */}
       {loading && <LoadingOverlay text="PREPARING YOUR ANALYSIS..." />}

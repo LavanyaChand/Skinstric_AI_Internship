@@ -11,13 +11,13 @@ function TileDiamondsCamera() {
         priority={false}
         src={largeDiamond}
         alt="Diamond Large"
-        className="absolute w-[270px] h-[270px] md:w-[482px] md:h-[482px] animate-spin-slow rotate-[205deg] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute w-[270px] h-[270px] md:w-[482px] md:h-[482px] animate-spin-slow top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       />
       <Image
         priority={false}
         src={mediumDiamond}
         alt="Diamond Medium"
-        className="absolute w-[230px] h-[230px] md:w-[444.34px] md:h-[444.34px] animate-spin-slower rotate-[190deg] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="absolute w-[230px] h-[230px] md:w-[444.34px] md:h-[444.34px] animate-spin-slower top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       />
       <Image
         priority={false}

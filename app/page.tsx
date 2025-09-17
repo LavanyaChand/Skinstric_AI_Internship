@@ -20,7 +20,7 @@ export default function Home() {
                         'hero-line-0';
 
   return (
-    <div className="max-sm:scale-[0.75] max-sm:origin-center max-sm:p-6">
+    <div className="max-sm:scale-[0.75] max-sm:origin-center p-20">
       <div className="flex-center flex-col h-[71dvh] md:fixed md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2">
         {/* center stack */}
         <div className="relative z-10 text-center">
@@ -31,22 +31,22 @@ export default function Home() {
 
           {/* mobile subtext + CTA (unchanged) */}
 
-          <div className="absolute inset-0 flex items-center justify-center lg:hidden">
-            <div className="diamond-350 border-dotted absolute top-1/2 left-1/2 -translate-x-[52%] -translate-y-1/2"></div>
+          <div className="absolute inset-0 flex items-center justify-center lg:hidden fadeIn delay-3">
+            <div className="diamond-350 border-dotted absolute top-[50%] left-1/2 -translate-x-[50%] -translate-y-[50%]"></div>
           </div>
 
-          <div className="absolute inset-0 flex items-center justify-center lg:hidden">
-            <div className="diamond-420 border-dotted absolute top-1/2 left-1/2 -translate-x-[52%] -translate-y-1/2"></div>
+          <div className="absolute inset-0 flex items-center justify-center lg:hidden fadeIn delay-3_5">
+            <div className="diamond-420 border-dotted absolute top-[50%] left-1/2 -translate-x-[50%] -translate-y-[50%]"></div>
           </div>
 
 
-          <p className="hero-sub-sm mx-auto">
+          <p className="hero-sub-sm mx-auto fadeInUp delay-2_5">
             Skinstric developed an A.I. that creates a highly-personalized routine tailored to what your skin needs.
           </p>
 
           <div className="hero-cta-sm">
             <Link href="/testing">
-              <button className="btn-ghost cursor-pointer">
+              <button className="btn-ghost cursor-pointer fadeInUp delay-2_5">
                 <span className="btn-ghost__label">ENTER EXPERIENCE</span>
                 <div className="diamond-24 flex items-center justify-center">
                   <span className="absolute scale-[0.5] transition-transform duration-300">
@@ -63,7 +63,7 @@ export default function Home() {
           className={`hidden lg:block fixed w-[500px] h-[500px] left-[calc(-50vw)] top-1/2 -translate-y-1/2
                        hero-anim ${hover === 'right' ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         >
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full fadeInRight delay-2_5">
             <div className="w-full h-full rotate-45 fixed border border-dotted border-dark-3 inset-0" />
             <button className="cursor-pointer group inline-flex items-center justify-center gap-4 text-sm text-dark-2 h-9
                                absolute top-1/2 right-0 -translate-y-1/2 translate-x-1/5 xl:translate-x-1/6
@@ -82,11 +82,11 @@ export default function Home() {
 
         {/* RIGHT rail (fades out while left is hovered) */}
         <div
-          className={`hidden lg:block fixed w-[500px] h-[500px] left-[calc(53vw)] top-1/2 -translate-y-1/2
+          className={`hidden lg:block fixed w-[500px] h-[500px] left-[calc(53vw)] top-1/2 -translate-y-1/2 
                       hero-anim ${hover === 'left' ? 'opacity-0 pointer-events-none' : 'opacity-100'}
                       `}
         >
-          <div className="relative w-full h-full">
+          <div className="relative w-full h-full fadeInLeft delay-2_5">
             <div className="w-full h-full rotate-45 fixed border border-dotted border-dark-3 inset-0" />
             <Link href="/testing">
               <button className="cursor-pointer group inline-flex items-center justify-center gap-4 text-sm text-dark-2 h-9
@@ -107,7 +107,7 @@ export default function Home() {
       </div>
 
       {/* desktop caption */}
-      <div className="hero-caption-left">
+      <div className="hero-caption-left fadeIn delay-3">
         <p>SKINSTRIC DEVELOPED AN A.I. THAT CREATES A HIGHLY-PERSONALIZED ROUTINE TAILORED TO WHAT YOUR SKIN NEEDS.</p>
       </div>
     </div>

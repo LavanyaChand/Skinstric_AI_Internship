@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -10,6 +10,10 @@ import { Phase2Response } from "@/lib/types";
 
 import BackButton from "../sharedComponent/BackButton";
 import LoadingOverlay from "../sharedComponent/LoadingOverlay";
+
+import largeDiamond from "../../public/images/largeDiamond.png";
+import mediumDiamond from "../../public/images/mediumDiamond.png";
+import smallDiamond from "../../public/images/smallDiamond.png";
 
 export default function CameraPage() {
   const router = useRouter();
@@ -23,8 +27,24 @@ export default function CameraPage() {
   const [shotDataUrl, setShotDataUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (loading) {
+      root.style.setProperty("--nav-logo-color", "#111111"); // black
+    } else {
+      root.style.removeProperty("--nav-logo-color");
+    }
+
+    // cleanup returns void
+    return () => {
+      root.style.removeProperty("--nav-logo-color");
+    };
+  }, [loading]);
+
+
   /** Start the camera and play after metadata */
-  const startCamera = async () => {
+  const startCamera = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user", width: { ideal: 1920 }, height: { ideal: 1080 } },
@@ -57,20 +77,43 @@ export default function CameraPage() {
       alert("Could not access the camera. Please allow camera access and try again.");
       router.push("/result");
     }
-  };
+  }, [router]);
 
-  /** Stop the camera right away (turns off LED, frees camera) */
-  const stopCamera = React.useCallback(() => {
+  /* Stop the camera */
+  const stopCamera = useCallback(() => {
+    // already stopped? bail
+    if (!streamRef.current && !videoRef.current?.srcObject) {
+      setIsReady(false);
+      return;
+    }
+
+    const v = videoRef.current;
+    const s = streamRef.current;
+
     try {
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      streamRef.current = null;
-      const v = videoRef.current;
+      // 1) Detach the stream from the <video> ASAP
       if (v) {
-        v.pause();
-        v.srcObject = null;
+        try { v.pause(); } catch { }
+        // Clearing srcObject first helps some browsers stop rendering immediately
+        try { (v as any).srcObject = null; } catch { }
+        // Also clear src to cover Safari/WebKit oddities
+        try { v.removeAttribute("src"); } catch { }
+        // Force a readyState reset
+        try { v.load(); } catch { }
       }
-    } catch { }
-    setIsReady(false);
+
+      // 2) Stop *all* tracks (video+audio in case audio sneaks in)
+      if (s) {
+        for (const t of s.getTracks()) {
+          try { t.stop(); } catch { }
+          // Optional: detach from stream for good measure
+          try { s.removeTrack?.(t as any); } catch { }
+        }
+      }
+    } finally {
+      streamRef.current = null;
+      setIsReady(false);
+    }
   }, []);
 
 
@@ -78,10 +121,9 @@ export default function CameraPage() {
   useEffect(() => {
     startCamera();
     return () => stopCamera();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [startCamera, stopCamera]);
 
-  /** Safety: whenever we switch back to video, ensure it's playing */
+  /** If we switch back to video, ensure it's playing */
   useEffect(() => {
     if (!shotDataUrl && videoRef.current) {
       const v = videoRef.current;
@@ -93,12 +135,10 @@ export default function CameraPage() {
           });
         }
       } else {
-        // stream was stopped earlier; start it again
         startCamera();
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shotDataUrl]);
+  }, [shotDataUrl, startCamera]);
 
   function takeShot() {
     const video = videoRef.current;
@@ -113,17 +153,20 @@ export default function CameraPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // grab the current frame
     ctx.drawImage(video, 0, 0, vw, vh);
+
+    // persist the image first
     const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
     setShotDataUrl(dataUrl);
 
-    // stop camera on next frame so the draw finishes cleanly
-    requestAnimationFrame(() => stopCamera());
+    // HARD STOP immediately (don’t wait for next frame)
+    stopCamera();
   }
 
+
   function retake() {
-    setShotDataUrl(null); // shows <video> again
-    // start immediately (useEffect above also ensures it plays)
+    setShotDataUrl(null);
     startCamera();
   }
 
@@ -148,132 +191,190 @@ export default function CameraPage() {
     }
   }
 
+
   return (
     <>
-      {/* Full-bleed stage */}
-      <main className="fixed inset-0 bg-black overflow-hidden">
-         {!isReady && (
-    <div className="absolute inset-0 grid place-items-center bg-white text-black">
-      <div className="relative">
-        {/* three rotated outlines (diamonds) */}
-        <div className="absolute inset-0 -rotate-12 w-[240px] h-[240px] border border-black/20 mx-auto" />
-        <div className="absolute inset-0 rotate-0   w-[260px] h-[260px] border border-black/30 mx-auto" />
-        <div className="absolute inset-0 rotate-12  w-[280px] h-[280px] border border-black/40 mx-auto" />
-        <div className="relative grid place-items-center w-[280px] h-[280px]">
-          <Image src="/icons/camera-icon.png" alt="" width={96} height={96} />
-          <p className="mt-4 text-xs tracking-widest">SETTING UP CAMERA…</p>
-        </div>
-      </div>
-    </div>
-  )}
-        {/* Live video or captured photo (fills the screen) */}
-        {!shotDataUrl ? (
-          <video
-            ref={videoRef}
-            autoPlay
-            muted
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={shotDataUrl}
-            alt="Captured"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
+      {/* Wrapping main keeps the video area responsive under your navbar */}
+      <main className="flex flex-col min-h-screen bg-black">
+        {/* Camera stage (same height behavior as your ref: ~92vh under the header) */}
+        <div className="relative w-screen h-[100vh] overflow-hidden bg-black">
+          {/* Figma-accurate loader. Keeps exact sizes; only scales on very small screens */}
+          {!isReady && !shotDataUrl && (
+            <div className="absolute inset-0 z-20 grid place-items-center bg-white text-black">
+              <div className="relative w-[760px] max-w-[92vw] aspect-square">
+                <Image
+                  alt="Diamond Large"
+                  src={largeDiamond}
+                  priority
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                             w-[404.03px] h-[404.03px] md:w-[604.03px] md:h-[604.03px]
+                             animate-spin-slow rotate-[190deg] select-none pointer-events-none will-change-transform"
+                />
+                <Image
+                  alt="Diamond Medium"
+                  src={mediumDiamond}
+                  priority
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                             w-[298px] h-[298px] md:w-[498px] md:h-[498px]
+                             animate-spin-slower rotate-[185deg] select-none pointer-events-none will-change-transform"
+                />
+                <Image
+                  alt="Diamond Small"
+                  src={smallDiamond}
+                  priority
+                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                             w-[205.18px] h-[205.18px] md:w-[405.18px] md:h-[405.18px]
+                             animate-spin-slowest select-none pointer-events-none will-change-transform"
+                />
 
-        {/* Hidden canvas for capture */}
-        <canvas ref={canvasRef} className="hidden" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <Image
+                    src="/icons/camera-icon.png"
+                    alt=""
+                    width={152}
+                    height={152}
+                    className="w-[80px] h-[80px] md:w-[152px] md:h-[152px]"
+                    priority
+                  />
+                  <p className="mt-4 tracking-widest font-semibold text-[10px] md:text-[16px]">
+                    SETTING UP CAMERA…
+                  </p>
 
-        {/* Bottom tip (only visible while live) */}
-        {!shotDataUrl && (
-          <div className=" mb-5 pointer-events-none absolute inset-x-0 bottom-[max(16px,env(safe-area-inset-bottom))] flex justify-center">
-            <div className="text-white/75 text-[11px] md:text-xs tracking-wide">
-              <p className="uppercase text-center mb-4">
-                To get better results make sure to have
-              </p>
-
-              <div className="flex items-center justify-center gap-6">
-                {/* bullet 1 */}
-                <span className="inline-flex items-center gap-2">
-                  <span className="inline-block w-[8px] h-[8px] md:w-2 md:h-2 rotate-45 border border-white/80"></span>
-                  <span className="uppercase">Neutral expression</span>
-                </span>
-
-                {/* bullet 2 */}
-                <span className="inline-flex items-center gap-2">
-                  <span className="inline-block w-[8px] h-[8px] md:w-2 md:h-2 rotate-45 border border-white/80"></span>
-                  <span className="uppercase">Frontal pose</span>
-                </span>
-
-                {/* bullet 3 */}
-                <span className="inline-flex items-center gap-2">
-                  <span className="inline-block w-[8px] h-[8px] md:w-2 md:h-2 rotate-45 border border-white/80"></span>
-                  <span className="uppercase">Adequate lighting</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-
-        {/* Controls */}
-        {!shotDataUrl ? (
-          <>
-            <button
-              onClick={takeShot}
-              aria-disabled={!isReady}
-              className={`
-                group absolute z-50 flex items-center gap-3 text-white
-                ${!isReady ? "opacity-50 pointer-events-none" : ""}
-                left-1/2 -translate-x-1/2 bottom-[calc(72px+env(safe-area-inset-bottom))]
-                md:left-auto md:translate-x-0 md:bottom-auto md:top-1/2 md:right-6
-              `}
-              aria-label="Take picture"
-              title="Take picture"
-            >
-              <span>Take capture</span>
-              <span
-                className="inline-grid place-items-center w-[62px] h-[62px] rounded-full
-                           transition-transform duration-300 ease-out will-change-transform
-                           group-hover:scale-110 active:scale-95 cursor-pointer"
-              >
-                <Image src="/icons/cameraCapture.png" alt="" width={62} height={62} priority />
-              </span>
-            </button>
-
-            {/* Back button (while live) */}
-            <div className="fixed inset-x-0 bottom-0 z-[100] bg-transparent pointer-events-none md:px-9 px-13">
-              <div className="relative h-24">
-                <div className="absolute left-6 md:left-0 bottom-8 pointer-events-auto">
-                  <BackButton onBeforeBack={stopCamera} />
+                  {/* Helper bullets (as in your Figma) */}
+                  <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 text-sm md:text-xs mt-2.5 text-black/70">
+                    <p className="uppercase text-center mb-3">
+                      To get better results make sure to have
+                    </p>
+                    <div className="flex items-center justify-center gap-6">
+                      <span className="inline-flex items-center gap-2">
+                        <span className="inline-block w-[8px] h-[8px] rotate-45 border border-black/60"></span>
+                        <span className="uppercase">Neutral expression</span>
+                      </span>
+                      <span className="inline-flex items-center gap-2">
+                        <span className="inline-block w-[8px] h-[8px] rotate-45 border border-black/60"></span>
+                        <span className="uppercase">Frontal pose</span>
+                      </span>
+                      <span className="inline-flex items-center gap-2">
+                        <span className="inline-block w-[8px] h-[8px] rotate-45 border border-black/60"></span>
+                        <span className="uppercase">Adequate lighting</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </>
-        ) : (
-          <>
-            <div className="absolute top-1/5 left-1/2 -translate-x-1/2 text-light-1 font-medium">
-              Great Shot!
+          )}
+
+          {/* Live video or captured image (full-bleed) */}
+          {!shotDataUrl ? (
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={shotDataUrl}
+              alt="Captured"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+
+          {/* Hidden canvas for capture */}
+          <canvas ref={canvasRef} className="hidden" />
+
+          {/* Bottom tip (only while live) */}
+          {!shotDataUrl && isReady && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-[max(16px,env(safe-area-inset-bottom))] flex justify-center">
+              <div className="text-white/75 text-[11px] md:text-xs tracking-wide">
+                <p className="uppercase text-center mb-3">
+                  To get better results make sure to have
+                </p>
+                <div className="flex items-center justify-center gap-6">
+                  <span className="inline-flex items-center gap-2">
+                    <span className="inline-block w-[8px] h-[8px] md:w-2 md:h-2 rotate-45 border border-white/80"></span>
+                    <span className="uppercase">Neutral expression</span>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span className="inline-block w-[8px] h-[8px] md:w-2 md:h-2 rotate-45 border border-white/80"></span>
+                    <span className="uppercase">Frontal pose</span>
+                  </span>
+                  <span className="inline-flex items-center gap-2">
+                    <span className="inline-block w-[8px] h-[8px] md:w-2 md:h-2 rotate-45 border border-white/80"></span>
+                    <span className="uppercase">Adequate lighting</span>
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="absolute left-[max(16px,env(safe-area-inset-left))] bottom-[max(16px,env(safe-area-inset-bottom))] flex gap-3">
-              <button
-                onClick={retake}
-                className="px-4 py-2 border border-white/80 text-white bg-white/10 hover:bg-white/20 transition text-sm backdrop-blur-sm"
-              >
-                Retake
-              </button>
-              <button
-                onClick={proceed}
-                className="px-4 py-2 bg-white text-black hover:bg-[#EAEAEA] transition text-sm"
-              >
-                Proceed
-              </button>
-            </div>
-          </>
-        )}
+          )}
+
+          {/* Controls */}
+          {!shotDataUrl ? (
+            <>
+              {/* Capture: bottom-center on mobile, right-center on md+.
+                  Hidden while overlay is showing (isReady=false). */}
+              {isReady && (
+                <button
+                  onClick={takeShot}
+                  className="
+                    group absolute z-30 flex items-center gap-3 text-white
+
+                    left-1/2 -translate-x-1/2 bottom-[calc(84px+env(safe-area-inset-bottom))]
+                    md:left-auto md:translate-x-0 md:bottom-auto md:top-1/2 md:right-8
+
+                    select-none
+                  "
+                  aria-label="Take picture"
+                  title="Take picture"
+                >
+                  <span className="hidden md:inline whitespace-nowrap">Take capture</span>
+                  <span
+                    className="inline-grid place-items-center w-[62px] h-[62px] rounded-full
+                               transition-transform duration-300 ease-out will-change-transform
+                               group-hover:scale-110 active:scale-95 cursor-pointer"
+                  >
+                    <Image src="/icons/cameraCapture.png" alt="" width={62} height={62} priority />
+                  </span>
+                </button>
+              )}
+
+              {/* Back button (while live) */}
+              {isReady && (
+                <div className="absolute inset-x-0 bottom-0 z-30 bg-transparent pointer-events-none md:px-9 px-13">
+                  <div className="relative h-24">
+                    <div className="absolute left-0 bottom-20 md:bottom-8 pointer-events-auto">
+                      <BackButton onBeforeBack={stopCamera} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+            </>
+          ) : (
+            <>
+              <div className="absolute top-1/5 left-1/2 -translate-x-1/2 text-light-1 font-medium">
+                Great Shot!
+              </div>
+              <div className="absolute right-[max(16px,env(safe-area-inset-left))] bottom-[max(16px,env(safe-area-inset-bottom))] flex gap-3 z-30">
+                <button
+                  onClick={retake}
+                  className="px-4 py-2 border border-white/80 text-white bg-white/10 hover:bg-white/20 transition text-sm backdrop-blur-sm"
+                >
+                  Retake
+                </button>
+                <button
+                  onClick={proceed}
+                  className="px-4 py-2 bg-white text-black hover:bg-[#EAEAEA] transition text-sm"
+                >
+                  Proceed
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </main>
 
       {loading && <LoadingOverlay text="PREPARING YOUR ANALYSIS..." />}

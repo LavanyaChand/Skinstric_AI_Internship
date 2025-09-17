@@ -197,7 +197,7 @@ const TestPage = () => {
 
           {/* right/corner */}
           {step === "done" && (
-            <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto">
+            <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto fadeInRight">
               <ProceedButton />
             </div>
           )}
