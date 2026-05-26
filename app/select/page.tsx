@@ -143,6 +143,8 @@ import smallDiamond from "../../public/images/smallDiamond.png";
 function Page() {
   // When true, enlarge the dotted diamonds behind the grid
   const [enlargeDots, setEnlargeDots] = useState(false);
+  // Tracks which disabled tile is hovered/focused for the WIP toast
+  const [wipTile, setWipTile] = useState<string | null>(null);
 
   return (
     <div>
@@ -189,7 +191,7 @@ function Page() {
 
           {/* 3x3 grid with four rotated tiles */}
           <div className="relative z-10 grid grid-cols-3 grid-rows-3 gap-0 ">
-            {/* top-center — Demographics */}
+            {/* top-center - Demographics */}
             <div className="flex items-center justify-center col-start-2 fade-up fade-up-delay-1 opacity-0">
               <Link href="/summary">
                 <button
@@ -202,40 +204,71 @@ function Page() {
               </Link>
             </div>
 
-            {/* middle-left */}
+            {/* middle-left - Cosmetic Concerns (WIP) */}
             <div className="flex items-center justify-center row-start-2 col-start-1 fade-up fade-up-delay-2 opacity-0">
               <button
-                className="w-[130px] h-[130px] md:w-[153.88px] md:h-[153.88px] bg-gray-100 hover:bg-gray-300 transform rotate-45 flex items-center justify-center -m-5 font-semibold leading-[24px] tracking-tight uppercase hover:scale-[1.05] cursor-not-allowed"
-                onMouseEnter={() => setEnlargeDots(true)}
-                onMouseLeave={() => setEnlargeDots(false)}
+                className="w-[130px] h-[130px] md:w-[153.88px] md:h-[153.88px] bg-gray-100 transform rotate-45 flex items-center justify-center -m-5 font-semibold leading-[24px] tracking-tight uppercase cursor-not-allowed opacity-50"
+                aria-label="Cosmetic Concerns -Coming Soon"
+                aria-disabled="true"
+                title="Work in progress -Coming Soon"
+                onMouseEnter={() => { setEnlargeDots(true); setWipTile("Cosmetic Concerns"); }}
+                onMouseLeave={() => { setEnlargeDots(false); setWipTile(null); }}
+                onFocus={() => setWipTile("Cosmetic Concerns")}
+                onBlur={() => setWipTile(null)}
               >
                 <span className="transform -rotate-45">Cosmetic Concerns</span>
               </button>
             </div>
 
-            {/* middle-right */}
+            {/* middle-right - Skin Type Details (WIP) */}
             <div className="flex items-center justify-center row-start-2 col-start-3 fade-up fade-up-delay-3 opacity-0">
               <button
-                className="w-[130px] h-[130px] md:w-[153.88px] md:h-[153.88px] bg-gray-100 hover:bg-gray-300 transform rotate-45 flex items-center justify-center -m-4.5 md:-m-5 font-semibold leading-[24px] tracking-tight uppercase hover:scale-[1.05] cursor-not-allowed"
-                onMouseEnter={() => setEnlargeDots(true)}
-                onMouseLeave={() => setEnlargeDots(false)}
+                className="w-[130px] h-[130px] md:w-[153.88px] md:h-[153.88px] bg-gray-100 transform rotate-45 flex items-center justify-center -m-4.5 md:-m-5 font-semibold leading-[24px] tracking-tight uppercase cursor-not-allowed opacity-50"
+                aria-label="Skin Type Details -Coming Soon"
+                aria-disabled="true"
+                title="Work in progress -Coming Soon"
+                onMouseEnter={() => { setEnlargeDots(true); setWipTile("Skin Type Details"); }}
+                onMouseLeave={() => { setEnlargeDots(false); setWipTile(null); }}
+                onFocus={() => setWipTile("Skin Type Details")}
+                onBlur={() => setWipTile(null)}
               >
                 <span className="transform -rotate-45">Skin Type Details</span>
               </button>
             </div>
 
-            {/* bottom-center */}
+            {/* bottom-center - Weather (WIP) */}
             <div className="flex items-center justify-center row-start-3 col-start-2 fade-up fade-up-delay-4 opacity-0">
               <button
-                className="w-[130px] h-[130px] md:w-[153.88px] md:h-[153.88px] bg-gray-100 hover:bg-gray-300 transform rotate-45 flex items-center justify-center -m-5 font-semibold leading-[24px] tracking-tight uppercase hover:scale-[1.05] cursor-not-allowed"
-                onMouseEnter={() => setEnlargeDots(true)}
-                onMouseLeave={() => setEnlargeDots(false)}
+                className="w-[130px] h-[130px] md:w-[153.88px] md:h-[153.88px] bg-gray-100 transform rotate-45 flex items-center justify-center -m-5 font-semibold leading-[24px] tracking-tight uppercase cursor-not-allowed opacity-50"
+                aria-label="Weather -Coming Soon"
+                aria-disabled="true"
+                title="Work in progress -Coming Soon"
+                onMouseEnter={() => { setEnlargeDots(true); setWipTile("Weather"); }}
+                onMouseLeave={() => { setEnlargeDots(false); setWipTile(null); }}
+                onFocus={() => setWipTile("Weather")}
+                onBlur={() => setWipTile(null)}
               >
                 <span className="transform -rotate-45">Weather</span>
               </button>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Screen-reader live region - announces WIP status on hover/focus */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {wipTile ? `${wipTile} is a work in progress and coming soon.` : ""}
+      </div>
+
+      {/* Visual "Coming Soon" toast for sighted users */}
+      <div
+        role="status"
+        aria-hidden="true"
+        className={`fixed bottom-32 left-1/2 -translate-x-1/2 z-[200] px-5 py-2 bg-[#1a1a1a] text-white text-[11px] font-semibold uppercase tracking-widest pointer-events-none transition-all duration-200 ${
+          wipTile ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+        }`}
+      >
+        {wipTile} - Work in Progress
       </div>
 
       {/* Bottom bar (unchanged) */}
