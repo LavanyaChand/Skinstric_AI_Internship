@@ -24,7 +24,7 @@ const NavBar = () => {
   const textColor = isCamera ? "text-light-1" : "text-dark-2";
 
   return (
-    <div className="absolute top-0 left-0 flex flex-row h-[64px] w-full justify-between items-center py-3 mb-3 z-[1000] bg-transparent">
+    <div className="print:hidden absolute top-0 left-0 flex flex-row h-[64px] w-full justify-between items-center py-3 mb-3 z-[1000] bg-transparent">
 
       {/* Logo */}
       <div className="flex-center flex-row pt-1 scale-75">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useAnalysisStore } from "@/lib/store";
 import BackButton from "../sharedComponent/BackButton";
 import Link from "next/link";
@@ -244,8 +244,23 @@ export default function RoutinePage() {
   return (
     <div className="px-8 md:px-14 py-10 min-h-screen">
 
+      {/* ── Print-only header ─────────────────────────────────────────── */}
+      <div className="hidden print:block mb-8 pb-6 border-b border-[#1A1B1C]/20">
+        <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#A0A0A0] mb-1">
+          SKINSTRIC A.I.
+        </p>
+        <p className="text-2xl font-normal tracking-tighter text-[#1A1B1C]">
+          Personalised Skin Routine
+        </p>
+        <div className="flex gap-6 mt-2">
+          <span className="text-[11px] text-[#6C7280] uppercase tracking-wide">Race: {race}</span>
+          <span className="text-[11px] text-[#6C7280] uppercase tracking-wide">Age: {age}</span>
+          <span className="text-[11px] text-[#6C7280] uppercase tracking-wide">Gender: {gender}</span>
+        </div>
+      </div>
+
       {/* ── Header ────────────────────────────────────────────────────── */}
-      <div className="text-start mx-4 md:mx-0 mb-6 pt-10">
+      <div className="print:hidden text-start mx-4 md:mx-0 mb-6 pt-10">
         <h2 className="text-base font-semibold mb-1 leading-[24px] fadeInUp delay-1">
           A.I. ANALYSIS
         </h2>
@@ -299,8 +314,8 @@ export default function RoutinePage() {
 
         {/* Right — routine */}
         <section>
-          {/* Morning / Evening toggle */}
-          <div className="flex gap-0 mb-0 border-b border-[#1A1B1C]/20">
+          {/* Morning / Evening toggle — screen only */}
+          <div className="print:hidden flex gap-0 mb-0 border-b border-[#1A1B1C]/20">
             {(["morning", "evening"] as const).map((t) => (
               <button
                 key={t}
@@ -317,56 +332,80 @@ export default function RoutinePage() {
             ))}
           </div>
 
-          {/* Steps */}
-          <ul>
+          {/* Steps — screen: active tab only */}
+          <ul className="print:hidden">
             {activeSteps.map(({ step, category, product, ingredient, why }) => (
               <li
                 key={`${tab}-${step}`}
                 className="flex items-start gap-4 py-4 px-3 -mx-3 border-b border-[#E1E1E2]
                            hover:bg-[#F8F8F8] transition-colors duration-150"
               >
-                {/* Step number */}
                 <span className="text-[11px] font-bold text-[#CBCBCB] tracking-widest w-7 pt-[3px] shrink-0 select-none">
                   {String(step).padStart(2, "0")}
                 </span>
-
-                {/* Diamond bullet */}
-                <span
-                  aria-hidden
-                  className="mt-[6px] inline-block w-[8px] h-[8px] rotate-45 border border-[#1A1B1C] shrink-0"
-                />
-
-                {/* Content */}
+                <span aria-hidden className="mt-[6px] inline-block w-[8px] h-[8px] rotate-45 border border-[#1A1B1C] shrink-0" />
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-                    <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#1A1B1C]">
-                      {category}
-                    </span>
+                    <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#1A1B1C]">{category}</span>
                     <span className="text-sm font-normal text-[#3D3D3D]">{product}</span>
                   </div>
-                  <p className="mt-1 text-[11px] text-[#6C7280] tracking-wide">
-                    {ingredient}
-                  </p>
-                  <p className="mt-1 text-[11px] leading-[18px] text-[#9CA3AF] italic">
-                    {why}
-                  </p>
+                  <p className="mt-1 text-[11px] text-[#6C7280] tracking-wide">{ingredient}</p>
+                  <p className="mt-1 text-[11px] leading-[18px] text-[#9CA3AF] italic">{why}</p>
                 </div>
               </li>
             ))}
           </ul>
+
+          {/* Steps — print: both morning + evening */}
+          <div className="hidden print:block">
+            {([["morning", morning], ["evening", evening]] as const).map(([label, steps]) => (
+              <div key={label} className="mb-8">
+                <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#1A1B1C] mb-3 pb-2 border-b border-[#E1E1E2]">
+                  {label === "morning" ? "☀  Morning Routine" : "🌙  Evening Routine"}
+                </p>
+                <ul>
+                  {steps.map(({ step, category, product, ingredient, why }) => (
+                    <li key={`print-${label}-${step}`} className="flex items-start gap-4 py-3 border-b border-[#E1E1E2]">
+                      <span className="text-[11px] font-bold text-[#CBCBCB] tracking-widest w-7 pt-[2px] shrink-0">{String(step).padStart(2, "0")}</span>
+                      <span aria-hidden className="mt-[5px] inline-block w-[7px] h-[7px] rotate-45 border border-[#1A1B1C] shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-x-3">
+                          <span className="text-[11px] font-bold tracking-[0.15em] uppercase text-[#1A1B1C]">{category}</span>
+                          <span className="text-sm text-[#3D3D3D]">{product}</span>
+                        </div>
+                        <p className="mt-0.5 text-[11px] text-[#6C7280]">{ingredient}</p>
+                        <p className="mt-0.5 text-[11px] text-[#9CA3AF] italic">{why}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
 
       {/* ── Bottom bar ────────────────────────────────────────────────── */}
-      <div className="fixed inset-x-0 bottom-0 z-[100] bg-transparent pointer-events-none md:px-9 px-13">
+      <div className="print:hidden fixed inset-x-0 bottom-0 z-[100] bg-transparent pointer-events-none md:px-9 px-13">
         <div className="relative h-24">
+
           {/* Back */}
           <div className="absolute left-6 md:left-0 bottom-8 pointer-events-auto">
             <BackButton />
           </div>
 
-          {/* Start Over */}
-          <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto">
+          {/* Download PDF + Start Over */}
+          <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto flex items-center gap-5">
+            {/* Download PDF */}
+            <button
+              onClick={() => window.print()}
+              className="hidden md:flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-dark-2 hover:opacity-60 transition-opacity cursor-pointer"
+            >
+              <span className="inline-block w-[7px] h-[7px] rotate-45 border border-dark-2" />
+              Download PDF
+            </button>
+
+            {/* Start Over */}
             <Link href="/" className="flex items-center text-dark-2 group">
               <span className="hidden md:inline-block mr-6 text-sm font-semibold uppercase tracking-wide">
                 Start Over
@@ -381,6 +420,7 @@ export default function RoutinePage() {
               </div>
             </Link>
           </div>
+
         </div>
       </div>
 
