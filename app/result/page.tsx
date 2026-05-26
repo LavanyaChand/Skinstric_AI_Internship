@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { uploadPhase2 } from "@/lib/phase2";
 import { useAnalysisStore } from "@/lib/store";
+import { toast } from "sonner";
 import { Phase2Response } from "@/lib/types";
 
 import BackButton from "../sharedComponent/BackButton";
@@ -65,12 +66,16 @@ export default function ResultPage() {
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      alert("Image analyzed successfully!");
+      toast.success("Analysis complete!", {
+        description: "Your skin profile is ready to view.",
+      });
       router.push("/select");
 
     } catch (e) {
       console.error(e);
-      alert("Failed to analyze image. Please try a different image.");
+      toast.error("Analysis failed", {
+        description: "Please try a different image and try again.",
+      });
     } finally {
       setLoading(false);
     }

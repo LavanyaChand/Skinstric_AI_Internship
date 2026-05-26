@@ -6,6 +6,7 @@ import { sortBuckets } from "@/lib/phase2";
 import BackButton from "../sharedComponent/BackButton";
 import Link from "next/link";
 import arrowLeft from "../../public/icons/arrowLeft.svg";
+import arrowRight from "../../public/icons/arrowRight.svg";
 import Image from "next/image";
 
 type Block = "race" | "age" | "gender";
@@ -313,7 +314,7 @@ function Page() {
             )}
           </div>
 
-          {/* right/corner: Reset / Confirm */}
+          {/* right/corner: Reset / Confirm / Get Routine */}
           <div className="absolute right-6 md:right-0 bottom-8 pointer-events-auto flex items-center gap-3">
             <button
               type="button"
@@ -336,6 +337,24 @@ function Page() {
             {justSaved && (
               <span className="ml-2 text-xs text-chart-2">Saved</span>
             )}
+
+            {/* Divider */}
+            <span className="hidden md:block w-px h-6 bg-[#1A1B1C]/20 mx-1" />
+
+            {/* Get Routine */}
+            <Link href="/routine" className="flex items-center text-dark-2 group">
+              <span className="hidden md:inline-block mr-4 text-sm font-semibold uppercase tracking-wide whitespace-nowrap">
+                Get Routine
+              </span>
+              <div className="diamond-44 grid place-items-center transition-transform duration-300 group-hover:scale-110">
+                <span className="-rotate-45 md:hidden text-[8px] font-semibold uppercase tracking-wide text-center leading-tight">
+                  Routine
+                </span>
+                <span className="-rotate-45 hidden md:block leading-none transition-transform duration-300 group-hover:scale-90">
+                  <Image src={arrowRight} alt="Get Routine" />
+                </span>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

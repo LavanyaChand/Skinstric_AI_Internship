@@ -195,10 +195,10 @@ export default function CameraPage() {
       
       <main className="flex flex-col min-h-screen bg-black">
         {/* Camera stage */}
-        <div className="relative w-screen h-[100vh] overflow-hidden bg-black">
+        <div className="relative w-full h-dvh overflow-hidden bg-black">
           {/* Camera Loader */}
           {!isReady && !shotDataUrl && (
-            <div className="absolute inset-0 z-20 grid place-items-center bg-white text-black">
+            <div className="fixed inset-0 z-20 grid place-items-center bg-white text-black">
               <div className="relative w-[760px] max-w-[92vw] aspect-square">
                 <Image
                   alt="Diamond Large"
@@ -269,14 +269,14 @@ export default function CameraPage() {
               autoPlay
               muted
               playsInline
-              className="absolute inset-0 w-full h-full object-cover"
+              disablePictureInPicture
+              className="fixed inset-0 w-full h-full object-cover z-0"
             />
           ) : (
-           
             <img
               src={shotDataUrl}
               alt="Captured"
-              className="absolute inset-0 w-full h-full object-cover"
+              className="fixed inset-0 w-full h-full object-cover z-0"
             />
           )}
 
