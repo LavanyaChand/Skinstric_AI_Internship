@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Skinstric A.I.
 
-## Getting Started
+> Sophisticated skincare powered by artificial intelligence.
 
-First, run the development server:
+Developed a computer vision A.I. that analyses your facial features to predict your demographic profile - race, age group, and gender - then uses that data to generate a highly-personalised skincare routine built for your exact skin needs.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🔗 Live Demo
+
+**[https://skinstric-ai-internship-beige.vercel.app/](https://skinstric-ai-internship-beige.vercel.app/)**
+
+---
+
+## ✨ Features
+
+- **AI Facial Analysis** - Computer vision scans your face and predicts your race, age group, and gender, each with a confidence percentage
+- **126 Unique Skin Profiles** - Built from 7 race categories × 9 age groups × 2 gender identities
+- **Camera or Gallery Upload** - Take a live selfie or upload a photo from your device
+- **Correctable Predictions** - Review and override any AI estimate before generating your routine
+- **Personalized Routine** - Generates a step-by-step morning and evening skincare routine with targeted ingredients and explanations
+- **Privacy First** - Images are analyzed in-session via a secure API and never stored or sold
+- **Responsive Design** - Fully responsive with smooth animations across desktop and mobile
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | [Next.js 16](https://nextjs.org) (App Router) |
+| Language | TypeScript |
+| UI | React 19 |
+| Styling | Tailwind CSS v4 |
+| State Management | Zustand |
+| Forms | React Hook Form + Zod |
+| HTTP Client | Axios |
+| Notifications | Sonner |
+| Icons | FontAwesome, Lucide React |
+| Deployment | Vercel |
+
+---
+
+## 📱 App Flow
+
+```
+Landing (/)
+  ├── Discover A.I. (/about)       - How the technology works
+  └── Take Test (/testing)         - Enter your name & location
+        └── Upload Photo (/result) - Camera capture or gallery upload
+              └── Demographics (/summary) - Review AI predictions (race, age, gender)
+                    └── Routine (/routine) - Your personalized AM/PM skincare routine
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🚀 Running Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Prerequisites:** Node.js 18+
 
-## Learn More
+```bash
+# 1. Clone the repository
+git clone https://github.com/LavanyaChand/Skinstric_AI_Internship.git
+cd Skinstric_AI_Internship
 
-To learn more about Next.js, take a look at the following resources:
+# 2. Install dependencies
+npm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# 3. Start the development server
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+### Available Scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server with Turbopack |
+| `npm run build` | Build for production |
+| `npm start` | Start the production server |
